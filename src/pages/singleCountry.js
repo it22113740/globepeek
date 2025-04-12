@@ -16,7 +16,14 @@ import {
   GlobeAsiaAustraliaIcon,
   TruckIcon,
 } from "@heroicons/react/24/outline";
-import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 import { jsPDF } from "jspdf";
 import { useTheme } from "../context/themeProvider";
 import { fetchCountryImages } from "../services/upsplashService";
@@ -31,17 +38,17 @@ const SingleCountry = () => {
   const [images, setImages] = useState([]);
   const { darkMode } = useTheme();
   const [selectedImage, setSelectedImage] = useState(null);
-const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-const openModal = (img) => {
-  setSelectedImage(img);
-  setIsModalOpen(true);
-};
+  const openModal = (img) => {
+    setSelectedImage(img);
+    setIsModalOpen(true);
+  };
 
-const closeModal = () => {
-  setIsModalOpen(false);
-  setSelectedImage(null);
-};
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedImage(null);
+  };
 
   useEffect(() => {
     CountryService.getCountryByName(countryName)
@@ -157,103 +164,109 @@ const closeModal = () => {
         </div>
 
         <div className="flex flex-col md:flex-row items-start md:items-center gap-10 p-8 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl transition-all duration-300 ease-in-out">
-  {/* Flag Section */}
-  <img
-    src={country.flags?.png}
-    alt={`Flag of ${country.name?.common}`}
-    className="w-full md:w-72 h-48 object-cover rounded-xl border-2 border-gray-200 dark:border-gray-700 shadow-lg"
-  />
+          {/* Flag Section */}
+          <img
+            src={country.flags?.png}
+            alt={`Flag of ${country.name?.common}`}
+            className="w-full md:w-72 h-48 object-cover rounded-xl border-2 border-gray-200 dark:border-gray-700 shadow-lg"
+          />
 
-  {/* Details Section */}
-  <div className="flex flex-col gap-6 w-full">
-    <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
-      {country.name?.common}
-    </h1>
+          {/* Details Section */}
+          <div className="flex flex-col gap-6 w-full">
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+              {country.name?.common}
+            </h1>
 
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-5">
-      <DetailItem
-        icon={<UsersIcon className="w-5 h-5 text-indigo-600" />}
-        label="Population"
-        value={country.population?.toLocaleString()}
-      />
-      <DetailItem
-        icon={<GlobeAltIcon className="w-5 h-5 text-green-600" />}
-        label="Region"
-        value={`${country.region} | Subregion: ${country.subregion || "N/A"}`}
-      />
-      <DetailItem
-        icon={<BuildingLibraryIcon className="w-5 h-5 text-red-600" />}
-        label="Capital"
-        value={country.capital?.[0] || "N/A"}
-      />
-      <DetailItem
-        icon={<CurrencyDollarIcon className="w-5 h-5 text-yellow-600" />}
-        label="Currency"
-        value={Object.values(country.currencies || {})[0]?.name || "N/A"}
-      />
-      <div className="col-span-1 sm:col-span-2 flex items-center text-gray-700 dark:text-gray-300">
-        <LanguageIcon className="w-5 h-5 text-purple-600 mr-2" />
-        <span className="font-medium">Language:</span>
-        {country.languages ? (
-          <select
-            className="ml-2 border dark:border-gray-600 px-3 py-1 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-            onChange={(e) => setSelectedLang(e.target.value)}
-          >
-            {Object.entries(country.languages).map(([code, lang]) => (
-              <option key={code} value={lang}>
-                {lang}
-              </option>
-            ))}
-          </select>
-        ) : (
-          <span className="ml-2">N/A</span>
-        )}
-      </div>
-      <DetailItem
-        icon={<MapPinIcon className="w-5 h-5 text-orange-500" />}
-        label="Area"
-        value={`${country.area?.toLocaleString()} km²`}
-      />
-      <DetailItem
-        icon={<ClockIcon className="w-5 h-5 text-teal-500" />}
-        label="Timezones"
-        value={country.timezones?.join(", ")}
-      />
-      <DetailItem
-        icon={<GlobeAsiaAustraliaIcon className="w-5 h-5 text-blue-500" />}
-        label="Top-level domain"
-        value={country.tld?.join(", ")}
-      />
-      <DetailItem
-        icon={<TruckIcon className="w-5 h-5 text-gray-600" />}
-        label="Driving Side"
-        value={country.car?.side}
-      />
-    </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-5">
+              <DetailItem
+                icon={<UsersIcon className="w-5 h-5 text-indigo-600" />}
+                label="Population"
+                value={country.population?.toLocaleString()}
+              />
+              <DetailItem
+                icon={<GlobeAltIcon className="w-5 h-5 text-green-600" />}
+                label="Region"
+                value={`${country.region} | Subregion: ${
+                  country.subregion || "N/A"
+                }`}
+              />
+              <DetailItem
+                icon={<BuildingLibraryIcon className="w-5 h-5 text-red-600" />}
+                label="Capital"
+                value={country.capital?.[0] || "N/A"}
+              />
+              <DetailItem
+                icon={
+                  <CurrencyDollarIcon className="w-5 h-5 text-yellow-600" />
+                }
+                label="Currency"
+                value={
+                  Object.values(country.currencies || {})[0]?.name || "N/A"
+                }
+              />
+              <div className="col-span-1 sm:col-span-2 flex items-center text-gray-700 dark:text-gray-300">
+                <LanguageIcon className="w-5 h-5 text-purple-600 mr-2" />
+                <span className="font-medium">Language:</span>
+                {country.languages ? (
+                  <select
+                    className="ml-2 border dark:border-gray-600 px-3 py-1 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                    onChange={(e) => setSelectedLang(e.target.value)}
+                  >
+                    {Object.entries(country.languages).map(([code, lang]) => (
+                      <option key={code} value={lang}>
+                        {lang}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <span className="ml-2">N/A</span>
+                )}
+              </div>
+              <DetailItem
+                icon={<MapPinIcon className="w-5 h-5 text-orange-500" />}
+                label="Area"
+                value={`${country.area?.toLocaleString()} km²`}
+              />
+              <DetailItem
+                icon={<ClockIcon className="w-5 h-5 text-teal-500" />}
+                label="Timezones"
+                value={country.timezones?.join(", ")}
+              />
+              <DetailItem
+                icon={
+                  <GlobeAsiaAustraliaIcon className="w-5 h-5 text-blue-500" />
+                }
+                label="Top-level domain"
+                value={country.tld?.join(", ")}
+              />
+              <DetailItem
+                icon={<TruckIcon className="w-5 h-5 text-gray-600" />}
+                label="Driving Side"
+                value={country.car?.side}
+              />
+            </div>
 
-    {/* Border Countries */}
-    {borderCountries.length > 0 && (
-      <div>
-        <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">
-          Neighboring Countries:
-        </h2>
-        <div className="flex flex-wrap gap-2">
-          {borderCountries.map((name, idx) => (
-            <Link
-              key={idx}
-              to={`/country/${name}`}
-              className="text-sm bg-blue-100 dark:bg-blue-700 text-blue-800 dark:text-white px-3 py-1 rounded-md hover:bg-blue-200 dark:hover:bg-blue-600 transition"
-            >
-              {name}
-            </Link>
-          ))}
+            {/* Border Countries */}
+            {borderCountries.length > 0 && (
+              <div>
+                <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">
+                  Neighboring Countries:
+                </h2>
+                <div className="flex flex-wrap gap-2">
+                  {borderCountries.map((name, idx) => (
+                    <Link
+                      key={idx}
+                      to={`/country/${name}`}
+                      className="text-sm bg-blue-100 dark:bg-blue-700 text-blue-800 dark:text-white px-3 py-1 rounded-md hover:bg-blue-200 dark:hover:bg-blue-600 transition"
+                    >
+                      {name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-    )}
-  </div>
-</div>
-
-
 
         {/* Map */}
         <div className="mt-10">
@@ -287,73 +300,75 @@ const closeModal = () => {
           <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">
             Population Comparison
           </h2>
-          <PieChart width={400} height={300}>
-            <Pie
-              data={populationData}
-              cx={200}
-              cy={150}
-              labelLine={false}
-              outerRadius={100}
-              dataKey="value"
-              label={({ name }) => name}
-            >
-              {populationData.map((entry, index) => (
-                <Cell key={index} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip />
-            <Legend />
-          </PieChart>
+          <div className="w-full h-[300px] sm:h-[400px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={populationData}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  outerRadius="80%"
+                  dataKey="value"
+                  label={({ name }) => name}
+                >
+                  {populationData.map((entry, index) => (
+                    <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
           {images.length > 0 && (
-  <div className="mt-6">
-    <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">
-      Scenic Views of {country.name?.common}
-    </h2>
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-      {images.map((img, index) => (
-        <div
-          key={index}
-          className="rounded-lg overflow-hidden shadow-md cursor-pointer hover:scale-105 transition-transform duration-200"
-          onClick={() => openModal(img.urls.full)}
-        >
-          <img
-            src={img.urls.regular}
-            alt={img.alt_description || `${country.name.common} view`}
-            className="w-full h-48 object-cover"
-          />
-        </div>
-      ))}
-      {isModalOpen && selectedImage && (
-  <div
-    className="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center"
-    onClick={closeModal}
-  >
-    <div className="relative max-w-4xl w-full p-4">
-      <img
-        src={selectedImage}
-        alt="Enlarged view"
-        className="w-full max-h-[90vh] object-contain rounded-lg shadow-lg"
-      />
-      <button
-        onClick={closeModal}
-        className="absolute top-4 right-4 text-white text-xl bg-black/50 rounded-full px-3 py-1 hover:bg-black"
-      >
-        ✕
-      </button>
-    </div>
-  </div>
-)}
-
-    </div>
-    <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-2">
-      Photos from{" "}
-      <a href="https://unsplash.com" className="underline">
-        Unsplash
-      </a>
-    </p>
-  </div>
-)}
-
+            <div className="mt-6">
+              <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">
+                Scenic Views of {country.name?.common}
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                {images.map((img, index) => (
+                  <div
+                    key={index}
+                    className="rounded-lg overflow-hidden shadow-md cursor-pointer hover:scale-105 transition-transform duration-200"
+                    onClick={() => openModal(img.urls.full)}
+                  >
+                    <img
+                      src={img.urls.regular}
+                      alt={img.alt_description || `${country.name.common} view`}
+                      className="w-full h-48 object-cover"
+                    />
+                  </div>
+                ))}
+                {isModalOpen && selectedImage && (
+                  <div
+                    className="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center"
+                    onClick={closeModal}
+                  >
+                    <div className="relative max-w-4xl w-full p-4">
+                      <img
+                        src={selectedImage}
+                        alt="Enlarged view"
+                        className="w-full max-h-[90vh] object-contain rounded-lg shadow-lg"
+                      />
+                      <button
+                        onClick={closeModal}
+                        className="absolute top-4 right-4 text-white text-xl bg-black/50 rounded-full px-3 py-1 hover:bg-black"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-2">
+                Photos from{" "}
+                <a href="https://unsplash.com" className="underline">
+                  Unsplash
+                </a>
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>
