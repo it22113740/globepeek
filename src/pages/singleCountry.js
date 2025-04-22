@@ -27,6 +27,7 @@ import {
 import { jsPDF } from "jspdf";
 import { useTheme } from "../context/themeProvider";
 import { fetchCountryImages } from "../services/upsplashService";
+import { fetchVideoByCountry } from "../services/youtubeService";
 
 const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042"];
 
@@ -35,6 +36,7 @@ const SingleCountry = () => {
   const [country, setCountry] = useState(null);
   const [borderCountries, setBorderCountries] = useState([]);
   const [selectedLang, setSelectedLang] = useState("");
+  const [video, setVideo] = useState(null);
   const [images, setImages] = useState([]);
   const { darkMode } = useTheme();
   const [selectedImage, setSelectedImage] = useState(null);
@@ -60,6 +62,15 @@ const SingleCountry = () => {
           fetchCountryImages(data.name.common, 5) // fetch 5 images
             .then((images) => {
               setImages(images); // whole array of images
+            })
+            .catch((error) =>
+              console.error("Error fetching country images:", error)
+            );
+
+            fetchVideoByCountry(data.name.common)
+            .then((video) => {
+              setVideo(video); // whole array of images
+              console.log("Vedio",video.videoId)
             })
             .catch((error) =>
               console.error("Error fetching country images:", error)
@@ -369,6 +380,25 @@ const SingleCountry = () => {
               </p>
             </div>
           )}
+          {video && (
+          <div className="mt-10">
+            <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">
+            Unveiling the Beauty of {country.name?.common}
+            </h2>
+            <div className="w-full">
+              <iframe
+                title="country-video"
+                width="100%"
+                height="400"
+                src={`https://www.youtube.com/embed/${video.videoId}`}
+                frameBorder="0"
+                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="rounded-lg"
+              ></iframe>
+            </div>
+          </div>
+        )}
         </div>
       </div>
     </div>
