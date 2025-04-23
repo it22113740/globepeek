@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import CountryService from "../services/CountryService";
-import DetailItem from "../components/detailItem";
+import DetailItem from "../components/Country/detailItem";
 import {
   UsersIcon,
   GlobeAltIcon,
@@ -28,6 +28,7 @@ import { jsPDF } from "jspdf";
 import { useTheme } from "../context/themeProvider";
 import { fetchCountryImages } from "../services/upsplashService";
 import { fetchVideoByCountry } from "../services/youtubeService";
+import FavoriteButton from "../components/Country/favouriteButton";
 
 const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042"];
 
@@ -41,6 +42,7 @@ const SingleCountry = () => {
   const { darkMode } = useTheme();
   const [selectedImage, setSelectedImage] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  
 
   const openModal = (img) => {
     setSelectedImage(img);
@@ -171,6 +173,7 @@ const SingleCountry = () => {
             >
               Export PDF
             </button>
+            <FavoriteButton countryName={country.name.common} />
           </div>
         </div>
 

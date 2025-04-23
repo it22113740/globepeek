@@ -4,6 +4,11 @@ import Home from './pages/home';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import SingleCountry from './pages/singleCountry';
 import NavBar from './components/navBar';
+import Login from './components/Auth/Login';
+import Register from './components/Auth/Register';
+import ProtectedRoute from './components/Profile/protectedRoute';
+import Profile from './components/Profile/Profile';
+import ChangePassword from './components/Auth/ChangePassword';
 
 function App() {
   return (
@@ -13,6 +18,10 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/:countryName" element={<SingleCountry />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path='/change-password' element={<ProtectedRoute><ChangePassword /></ProtectedRoute>} />
         </Routes>
       </Router>
     </div>
