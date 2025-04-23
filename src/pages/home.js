@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CountryService from "../services/CountryService";
-import CountryCard from "../components/countryCard";
+import CountryCard from "../components/Country/countryCard";
 import { useTheme } from "../context/themeProvider";
 
 const ITEMS_PER_PAGE = 20;
