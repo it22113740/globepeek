@@ -1,31 +1,44 @@
 import React from "react";
 import { useTheme } from "../context/themeProvider";
-import { FaSun, FaMoon } from "react-icons/fa"; // Icons
+import { FaSun, FaMoon } from "react-icons/fa";
+
 
 const NavBar = () => {
   const { darkMode, toggleTheme } = useTheme();
 
+
   return (
-    <div className={`${darkMode ? "dark" : ""} bg-gray-100 dark:bg-gray-800 py-4`}>
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-700 dark:text-white text-center w-full">
-          🌍 Globe Peek
-        </h1>
+    <nav
+      className={`fixed top-0 left-0 w-full z-50 shadow-lg ${
+        darkMode
+          ? "dark bg-gray-900"
+          : "bg-gradient-to-r from-indigo-600 to-blue-500"
+      } transition-colors duration-300`}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+        {/* Logo/Title */}
+        <a className="flex items-center gap-2 cursor-pointer" href="/">
+          <span className="text-3xl">🌍</span>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-white dark:text-gray-100 tracking-tight">
+            Globe Peek
+          </h1>
+        </a>
+
+        {/* Theme Toggle Button */}
         <button
           onClick={toggleTheme}
-          className="absolute right-6 px-4 py-2 rounded bg-gray-800 text-white hover:bg-gray-700 dark:bg-gray-200 dark:text-gray-800 dark:hover:bg-gray-300 flex items-center gap-2"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/20 dark:bg-gray-800 text-white dark:text-gray-200 hover:bg-white/30 dark:hover:bg-gray-700 transition duration-200 shadow-md"
+          aria-label={`Switch to ${darkMode ? "light" : "dark"} mode`}
         >
-          {/* 🌙 Icon when in light mode, 🌞 icon when in dark mode */}
-          <span className="block md:hidden">
+          <span className="text-lg">
             {darkMode ? <FaSun /> : <FaMoon />}
           </span>
-          {/* Text label on md+ screens only */}
-          <span className="hidden md:block">
+          <span className="hidden sm:block text-sm font-medium">
             {darkMode ? "Light Mode" : "Dark Mode"}
           </span>
         </button>
       </div>
-    </div>
+    </nav>
   );
 };
 

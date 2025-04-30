@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../supabase/clinet.js';
+import { useTheme } from '../../context/themeProvider.js';
 
 export default function FavoriteButton({ countryName }) {
   const [isFav, setIsFav] = useState(false);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  const { darkMode } = useTheme();
 
   useEffect(() => {
     (async () => {
@@ -53,7 +55,7 @@ export default function FavoriteButton({ countryName }) {
   };
 
   return (
-    <button onClick={toggleFavorite}>
+    <button onClick={toggleFavorite} className={`${darkMode ? "text-white" : "text-gray-800"}`}>
       {isFav ? '❤️ Remove Favorite' : '🤍 Add to Favorite'}
     </button>
   );
