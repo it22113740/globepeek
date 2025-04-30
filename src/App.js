@@ -16,7 +16,6 @@ function App() {
   return (
     <div className="App">
       <NavBar />
-      <Router>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/countries" element={<Home />} />
@@ -26,7 +25,6 @@ function App() {
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path='/change-password' element={<ProtectedRoute><ChangePassword /></ProtectedRoute>} />
         </Routes>
-      </Router>
       <Footer />
     </div>
   );
