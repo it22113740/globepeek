@@ -35,10 +35,10 @@ export default function Profile() {
     setLoading(false);
   };
 
-  const handleLogout = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (!error) navigate('/login');
-  };
+  // const handleLogout = async () => {
+  //   const { error } = await supabase.auth.signOut();
+  //   if (!error) navigate('/login');
+  // };
 
   const updateProfile = async (e) => {
     e.preventDefault();
@@ -175,13 +175,13 @@ export default function Profile() {
                 >
                   Update Profile
                 </button>
-                <button
+                {/* <button
                   type="button"
                   onClick={handleLogout}
                   className="w-full px-4 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-200 shadow-md"
                 >
                   Logout
-                </button>
+                </button> */}
                 <button
                   type="button"
                   onClick={() => navigate('/change-password')}
