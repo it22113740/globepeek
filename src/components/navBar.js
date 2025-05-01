@@ -66,7 +66,9 @@ const NavBar = () => {
         <a className="flex items-center gap-2 cursor-pointer" href="/">
           <span className="text-3xl">🌍</span>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white dark:text-gray-100 tracking-tight">
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-white dark:from-indigo-400 dark:to-purple-400">
             Globe Peek
+          </span>
           </h1>
         </a>
 
