@@ -416,6 +416,10 @@ const SingleCountry = () => {
               </ResponsiveContainer>
             </div>
           </div>
+          <div className="lg:hidden md:hidden">
+          <WeatherCard capital={country.capital?.[0]} />
+          <TopDestinations country={country.name.common} lat={country.latlng[0]} lon={country.latlng[1]} />
+          </div>
 
           {/* Sidebar (Sticky Actions) */}
           <div className="hidden lg:block sticky top-20">
