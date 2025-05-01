@@ -4,6 +4,7 @@ import CountryService from "../services/CountryService";
 import { fetchCountryImages } from "../services/upsplashService";
 import { fetchVideoByCountry } from "../services/youtubeService";
 import FavoriteButton from "../components/Country/favouriteButton";
+import WeatherCard from "../components/Country/weatherCard";
 import {
   UsersIcon,
   GlobeAltIcon,
@@ -18,7 +19,14 @@ import {
   GlobeAsiaAustraliaIcon,
   TruckIcon,
 } from "@heroicons/react/24/outline";
-import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 import { jsPDF } from "jspdf";
 import { useTheme } from "../context/themeProvider";
 
@@ -28,8 +36,12 @@ const DetailItem = ({ icon, label, value }) => (
   <div className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow">
     {icon}
     <div>
-      <span className="font-semibold text-gray-800 dark:text-gray-200">{label}:</span>
-      <span className="text-gray-600 dark:text-gray-400 ml-1">{value || "N/A"}</span>
+      <span className="font-semibold text-gray-800 dark:text-gray-200">
+        {label}:
+      </span>
+      <span className="text-gray-600 dark:text-gray-400 ml-1">
+        {value || "N/A"}
+      </span>
     </div>
   </div>
 );
@@ -64,11 +76,15 @@ const SingleCountry = () => {
 
           fetchCountryImages(data.name.common, 5)
             .then((images) => setImages(images))
-            .catch((error) => console.error("Error fetching country images:", error));
+            .catch((error) =>
+              console.error("Error fetching country images:", error)
+            );
 
           fetchVideoByCountry(data.name.common)
             .then((video) => setVideo(video))
-            .catch((error) => console.error("Error fetching country video:", error));
+            .catch((error) =>
+              console.error("Error fetching country video:", error)
+            );
 
           if (data.borders?.length) {
             Promise.all(
@@ -95,8 +111,16 @@ const SingleCountry = () => {
     doc.text(`Population: ${country.population?.toLocaleString()}`, 10, 30);
     doc.text(`Region: ${country.region}`, 10, 40);
     doc.text(`Capital: ${country.capital?.[0] || "N/A"}`, 10, 50);
-    doc.text(`Currency: ${Object.values(country.currencies || {})[0]?.name || "N/A"}`, 10, 60);
-    doc.text(`Languages: ${Object.values(country.languages || {}).join(", ")}`, 10, 70);
+    doc.text(
+      `Currency: ${Object.values(country.currencies || {})[0]?.name || "N/A"}`,
+      10,
+      60
+    );
+    doc.text(
+      `Languages: ${Object.values(country.languages || {}).join(", ")}`,
+      10,
+      70
+    );
     doc.text(`Area: ${country.area?.toLocaleString()} km²`, 10, 80);
     doc.text(`Timezones: ${country.timezones?.join(", ")}`, 10, 90);
     doc.text(`Top-level domain: ${country.tld?.join(", ")}`, 10, 100);
@@ -111,7 +135,13 @@ const SingleCountry = () => {
 
   if (!country) {
     return (
-      <div className={`min-h-screen ${darkMode ? "dark bg-gray-900" : "bg-gradient-to-br from-indigo-100 to-blue-100"}`}>
+      <div
+        className={`min-h-screen ${
+          darkMode
+            ? "dark bg-gray-900"
+            : "bg-gradient-to-br from-indigo-100 to-blue-100"
+        }`}
+      >
         <div className="max-w-6xl mx-auto p-6">
           <div className="animate-pulse space-y-4">
             <div className="h-8 bg-gray-300 dark:bg-gray-700 rounded w-1/3"></div>
@@ -130,28 +160,58 @@ const SingleCountry = () => {
   populationData.push({ name: country.name.common, value: country.population });
 
   return (
-    <div className={`min-h-screen ${darkMode ? "dark bg-gray-900" : "bg-gradient-to-br from-indigo-100 to-blue-100"} pt-16`}>
+    <div
+      className={`min-h-screen ${
+        darkMode
+          ? "dark bg-gray-900"
+          : "bg-gradient-to-br from-indigo-100 to-blue-100"
+      } pt-16`}
+    >
       <div className="max-w-6xl mx-auto p-6">
         {/* Hero Section */}
-        <div className="relative h-96 bg-cover bg-center rounded-xl overflow-hidden shadow-xl" style={{ backgroundImage: `url(${images[0]?.urls?.regular || country.flags?.png})` }}>
+        <div
+          className="relative h-96 bg-cover bg-center rounded-xl overflow-hidden shadow-xl"
+          style={{
+            backgroundImage: `url(${
+              images[0]?.urls?.regular || country.flags?.png
+            })`,
+          }}
+        >
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-transparent flex flex-col justify-center items-center text-white">
-            <img src={country.flags?.png} alt={`Flag of ${country.name?.common}`} className="w-24 h-16 rounded shadow-lg mb-4" />
-            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight">{country.name?.common}</h1>
-            <p className="text-lg mt-2">{country.region} | {country.subregion || "N/A"}</p>
+            <img
+              src={country.flags?.png}
+              alt={`Flag of ${country.name?.common}`}
+              className="w-24 h-16 rounded shadow-lg mb-4"
+            />
+            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight">
+              {country.name?.common}
+            </h1>
+            <p className="text-lg mt-2">
+              {country.region} | {country.subregion || "N/A"}
+            </p>
           </div>
         </div>
 
         {/* Navigation and Actions */}
         <div className="flex justify-between items-center mt-6">
-          <Link to="/" className="inline-flex items-center text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 transition">
+          <Link
+            to="/"
+            className="inline-flex items-center text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 transition"
+          >
             <ArrowLeftIcon className="w-5 h-5 mr-2" />
             Back to Home
           </Link>
           <div className="flex gap-4">
-            <button onClick={handleCopyLink} className="text-sm text-blue-600 dark:text-blue-400 hover:underline flex items-center">
+            <button
+              onClick={handleCopyLink}
+              className="text-sm text-blue-600 dark:text-blue-400 hover:underline flex items-center"
+            >
               Share <ArrowTopRightOnSquareIcon className="w-4 h-4 ml-1" />
             </button>
-            <button onClick={handleExportPDF} className="text-sm text-green-600 dark:text-green-400 hover:underline">
+            <button
+              onClick={handleExportPDF}
+              className="text-sm text-green-600 dark:text-green-400 hover:underline"
+            >
               Export PDF
             </button>
             <FavoriteButton countryName={country.name.common} />
@@ -163,77 +223,96 @@ const SingleCountry = () => {
           {/* Details Section */}
           <div className="lg:col-span-3">
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
-              <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-6">Country Details</h2>
+              <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-6">
+                Country Details
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-  <div className="w-full">
-    <DetailItem
-      icon={<UsersIcon className="w-6 h-6 text-indigo-600" />}
-      label="Population"
-      value={country.population?.toLocaleString()}
-    />
-  </div>
-  <div className="w-full">
-    <DetailItem
-      icon={<GlobeAltIcon className="w-6 h-6 text-green-600" />}
-      label="Region"
-      value={`${country.region} | Subregion: ${country.subregion || "N/A"}`}
-    />
-  </div>
-  <div className="w-full">
-    <DetailItem
-      icon={<BuildingLibraryIcon className="w-6 h-6 text-red-600" />}
-      label="Capital"
-      value={country.capital?.[0] || "N/A"}
-    />
-  </div>
-  <div className="w-full">
-    <DetailItem
-      icon={<CurrencyDollarIcon className="w-6 h-6 text-yellow-600" />}
-      label="Currency"
-      value={Object.values(country.currencies || {})[0]?.name || "N/A"}
-    />
-  </div>
-  <div className="col-span-1 md:col-span-2 w-full">
-    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md">
-      <div className="flex items-center">
-        <LanguageIcon className="w-6 h-6 text-purple-600 mr-2" />
-        <span className="font-semibold text-gray-800 dark:text-gray-200">Language:</span>
-      </div>
-      {country.languages ? (
-        <select
-          className="border dark:border-gray-600 px-3 py-1 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none w-full sm:w-auto"
-          onChange={(e) => setSelectedLang(e.target.value)}
-        >
-          {Object.entries(country.languages).map(([code, lang]) => (
-            <option key={code} value={lang}>{lang}</option>
-          ))}
-        </select>
-      ) : (
-        <span className="text-gray-600 dark:text-gray-400 ml-2">N/A</span>
-      )}
-    </div>
-  </div>
-  <div className="w-full">
-    <DetailItem
-      icon={<MapPinIcon className="w-6 h-6 text-orange-500" />}
-      label="Area"
-      value={`${country.area?.toLocaleString()} km²`}
-    />
-  </div>
-  <div className="w-full">
-    <DetailItem
-      icon={<ClockIcon className="w-6 h-6 text-teal-500" />}
-      label="Timezones"
-      value={country.timezones?.join(", ")}
-    />
-  </div>
-</div>
-
+                <div className="w-full">
+                  <DetailItem
+                    icon={<UsersIcon className="w-6 h-6 text-indigo-600" />}
+                    label="Population"
+                    value={country.population?.toLocaleString()}
+                  />
+                </div>
+                <div className="w-full">
+                  <DetailItem
+                    icon={<GlobeAltIcon className="w-6 h-6 text-green-600" />}
+                    label="Region"
+                    value={`${country.region} | Subregion: ${
+                      country.subregion || "N/A"
+                    }`}
+                  />
+                </div>
+                <div className="w-full">
+                  <DetailItem
+                    icon={
+                      <BuildingLibraryIcon className="w-6 h-6 text-red-600" />
+                    }
+                    label="Capital"
+                    value={country.capital?.[0] || "N/A"}
+                  />
+                </div>
+                <div className="w-full">
+                  <DetailItem
+                    icon={
+                      <CurrencyDollarIcon className="w-6 h-6 text-yellow-600" />
+                    }
+                    label="Currency"
+                    value={
+                      Object.values(country.currencies || {})[0]?.name || "N/A"
+                    }
+                  />
+                </div>
+                <div className="col-span-1 md:col-span-2 w-full">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+                    <div className="flex items-center">
+                      <LanguageIcon className="w-6 h-6 text-purple-600 mr-2" />
+                      <span className="font-semibold text-gray-800 dark:text-gray-200">
+                        Language:
+                      </span>
+                    </div>
+                    {country.languages ? (
+                      <select
+                        className="border dark:border-gray-600 px-3 py-1 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none w-full sm:w-auto"
+                        onChange={(e) => setSelectedLang(e.target.value)}
+                      >
+                        {Object.entries(country.languages).map(
+                          ([code, lang]) => (
+                            <option key={code} value={lang}>
+                              {lang}
+                            </option>
+                          )
+                        )}
+                      </select>
+                    ) : (
+                      <span className="text-gray-600 dark:text-gray-400 ml-2">
+                        N/A
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="w-full">
+                  <DetailItem
+                    icon={<MapPinIcon className="w-6 h-6 text-orange-500" />}
+                    label="Area"
+                    value={`${country.area?.toLocaleString()} km²`}
+                  />
+                </div>
+                <div className="w-full">
+                  <DetailItem
+                    icon={<ClockIcon className="w-6 h-6 text-teal-500" />}
+                    label="Timezones"
+                    value={country.timezones?.join(", ")}
+                  />
+                </div>
+              </div>
 
               {/* Border Countries */}
               {borderCountries.length > 0 && (
                 <div className="mt-8">
-                  <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Neighboring Countries</h2>
+                  <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
+                    Neighboring Countries
+                  </h2>
                   <div className="flex flex-wrap gap-2">
                     {borderCountries.map((name, idx) => (
                       <Link
@@ -262,22 +341,42 @@ const SingleCountry = () => {
                   height="100%"
                   loading="lazy"
                   className="border-0"
-                  src={`https://www.openstreetmap.org/export/embed.html?bbox=${lng - 1}%2C${lat - 1}%2C${lng + 1}%2C${lat + 1}&layer=mapnik&marker=${lat}%2C${lng}`}
+                  src={`https://www.openstreetmap.org/export/embed.html?bbox=${
+                    lng - 1
+                  }%2C${lat - 1}%2C${lng + 1}%2C${
+                    lat + 1
+                  }&layer=mapnik&marker=${lat}%2C${lng}`}
                 ></iframe>
               </div>
               <p className="text-sm mt-2 text-gray-600 dark:text-gray-400">
-                Map data © <a href="https://www.openstreetmap.org/" className="underline">OpenStreetMap</a> contributors
+                Map data ©{" "}
+                <a href="https://www.openstreetmap.org/" className="underline">
+                  OpenStreetMap
+                </a>{" "}
+                contributors
               </p>
             </div>
 
             {/* Population Chart */}
             <div className="mt-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
-              <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">Population Comparison</h2>
+              <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">
+                Population Comparison
+              </h2>
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
-                  <Pie data={populationData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100}>
+                  <Pie
+                    data={populationData}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={100}
+                  >
                     {populationData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
                     ))}
                   </Pie>
                   <Tooltip />
@@ -290,22 +389,46 @@ const SingleCountry = () => {
           {/* Sidebar (Sticky Actions) */}
           <div className="hidden lg:block sticky top-20">
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Quick Actions</h3>
-              <button onClick={handleCopyLink} className="block w-full text-left py-2 text-blue-600 dark:text-blue-400 hover:underline">Share</button>
-              <button onClick={handleExportPDF} className="block w-full text-left py-2 text-green-600 dark:text-green-400 hover:underline">Export PDF</button>
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">
+                Quick Actions
+              </h3>
+              <button
+                onClick={handleCopyLink}
+                className="block w-full text-left py-2 text-blue-600 dark:text-blue-400 hover:underline"
+              >
+                Share
+              </button>
+              <button
+                onClick={handleExportPDF}
+                className="block w-full text-left py-2 text-green-600 dark:text-green-400 hover:underline"
+              >
+                Export PDF
+              </button>
               <FavoriteButton countryName={country.name.common} />
-              <h4 className="mt-4 font-semibold text-gray-800 dark:text-white">Quick Facts</h4>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Population: {country.population?.toLocaleString()}</p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Capital: {country.capital?.[0] || "N/A"}</p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Area: {country.area?.toLocaleString()} km²</p>
+              <h4 className="mt-4 font-semibold text-gray-800 dark:text-white">
+                Quick Facts
+              </h4>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Population: {country.population?.toLocaleString()}
+              </p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Capital: {country.capital?.[0] || "N/A"}
+              </p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Area: {country.area?.toLocaleString()} km²
+              </p>
             </div>
+            {/* 🌤️ Weather Section */}
+            <WeatherCard capital={country.capital?.[0]} />
           </div>
         </div>
 
         {/* Media Gallery */}
         {images.length > 0 && (
           <div className="mt-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
-            <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">Scenic Views of {country.name?.common}</h2>
+            <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">
+              Scenic Views of {country.name?.common}
+            </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {images.map((img, index) => (
                 <div
@@ -323,7 +446,10 @@ const SingleCountry = () => {
               ))}
             </div>
             <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-4">
-              Photos from <a href="https://unsplash.com" className="underline">Unsplash</a>
+              Photos from{" "}
+              <a href="https://unsplash.com" className="underline">
+                Unsplash
+              </a>
             </p>
           </div>
         )}
@@ -331,7 +457,9 @@ const SingleCountry = () => {
         {/* Video Section */}
         {video && (
           <div className="mt-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
-            <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">Unveiling the Beauty of {country.name?.common}</h2>
+            <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">
+              Unveiling the Beauty of {country.name?.common}
+            </h2>
             <div className="w-full h-[400px] rounded-lg overflow-hidden">
               <iframe
                 title="country-video"
@@ -348,7 +476,10 @@ const SingleCountry = () => {
 
         {/* Image Modal */}
         {isModalOpen && selectedImage && (
-          <div className="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center" onClick={closeModal}>
+          <div
+            className="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center"
+            onClick={closeModal}
+          >
             <div className="relative max-w-4xl w-full p-4">
               <img
                 src={selectedImage}
