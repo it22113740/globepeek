@@ -41,7 +41,7 @@ const LandingPage = () => {
           .slice(0, 4); // Limit to 4
         const countriesWithImages = await Promise.all(
           countries.map(async (country) => {
-            const images = await fetchCountryImages(country.name.common, 1);
+            const images = await fetchCountryImages(`Scenic tourist attractions in ${country.name.common}`, 1);
             return {
               ...country,
               image: images[0]?.urls.regular || 'https://via.placeholder.com/300',
