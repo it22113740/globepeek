@@ -15,6 +15,15 @@ const LandingPage = () => {
   const [heroImage, setHeroImage] = useState('');
   const [featuredCountries, setFeaturedCountries] = useState([]);
   const [featuredVideo, setFeaturedVideo] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      const session = await supabase.auth.getSession();
+      setIsLoggedIn(session.data.session !== null);
+    };
+    checkLoginStatus();
+  }, []);
 
   // Fetch hero background image
   useEffect(() => {
@@ -85,7 +94,7 @@ const LandingPage = () => {
 
   return (
     <div
-      className={`min-h-screen ${
+      className={`min-h-screen mt-16 ${
         darkMode
           ? 'dark bg-gradient-to-br from-gray-900 to-gray-800'
           : 'bg-gradient-to-br from-indigo-100 via-blue-100 to-purple-100'
@@ -125,7 +134,7 @@ const LandingPage = () => {
           >
             <button
               onClick={() => navigate('/register')}
-              className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg shadow-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 text-lg font-semibold"
+              className={`px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg shadow-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 text-lg font-semibold ${isLoggedIn ? 'hidden' : ''}`}
             >
               Get Started
             </button>
