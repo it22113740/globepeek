@@ -6,19 +6,46 @@ import { useTheme } from "../context/themeProvider";
 const ITEMS_PER_PAGE = 20;
 
 const Home = () => {
+  // Initialize state with values from localStorage or defaults
   const [countries, setCountries] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(
+    localStorage.getItem("searchQuery") || ""
+  );
   const [suggestions, setSuggestions] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [regionFilter, setRegionFilter] = useState("");
-  const [languageFilter, setLanguageFilter] = useState("");
+  const [currentPage, setCurrentPage] = useState(
+    Number(localStorage.getItem("currentPage")) || 1
+  );
+  const [regionFilter, setRegionFilter] = useState(
+    localStorage.getItem("regionFilter") || ""
+  );
+  const [languageFilter, setLanguageFilter] = useState(
+    localStorage.getItem("languageFilter") || ""
+  );
   const { darkMode } = useTheme();
 
+  // Fetch countries on mount
   useEffect(() => {
     CountryService.getAllCountries()
       .then((response) => setCountries(response.data))
       .catch((error) => console.error("Error fetching countries:", error));
   }, []);
+
+  // Persist filter state to localStorage when they change
+  useEffect(() => {
+    localStorage.setItem("searchQuery", searchQuery);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    localStorage.setItem("regionFilter", regionFilter);
+  }, [regionFilter]);
+
+  useEffect(() => {
+    localStorage.setItem("languageFilter", languageFilter);
+  }, [languageFilter]);
+
+  useEffect(() => {
+    localStorage.setItem("currentPage", currentPage);
+  }, [currentPage]);
 
   const getPaginationRange = (currentPage, totalPages, maxVisible = 5) => {
     const delta = Math.floor(maxVisible / 2);
@@ -84,6 +111,11 @@ const Home = () => {
     setLanguageFilter("");
     setSuggestions([]);
     setCurrentPage(1);
+    // Clear localStorage
+    localStorage.removeItem("searchQuery");
+    localStorage.removeItem("regionFilter");
+    localStorage.removeItem("languageFilter");
+    localStorage.removeItem("currentPage");
   };
 
   const filteredCountries = countries.filter((country) => {
